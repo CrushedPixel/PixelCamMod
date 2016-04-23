@@ -1,0 +1,15 @@
+[
+{
+  "modid": "pixelcam",
+  "name": "PixelCam",
+  "description": "A cinematic tool to create smooth camera movements along a path.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["CrushedPixel"],
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

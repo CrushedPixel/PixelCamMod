@@ -1,0 +1,15 @@
+pixelcam.commands.cam.notFound=Unknown command. Try /cam help for a list of commands
+pixelcam.commands.cam.base.usage=/cam <command> [params]
+pixelcam.commands.cam.p.usage=/cam p [index]
+pixelcam.commands.cam.goto.usage=/cam goto <point>
+pixelcam.commands.cam.clear.usage=/cam clear
+pixelcam.commands.cam.start.usage=/cam start <duration> [linear|cubic]
+pixelcam.commands.cam.stop.usage=/cam stop
+pixelcam.commands.cam.help.usage=/cam help
+pixelcam.commands.cam.help.main=Available commands:
+pixelcam.commands.cam.help.scheme=%1$s - %2$s
+pixelcam.commands.cam.help.p=Adds a new point. If an index is specified, the new point is inserted in the path at that index.
+pixelcam.commands.cam.help.goto=Jumps to the specified point on the path.
+pixelcam.commands.cam.help.clear=Removes all points from the path.
+pixelcam.commands.cam.help.start=Travels the path, taking the specified amount of seconds.
+pixelcam.commands.cam.help.stop=Stops travelling the path.
