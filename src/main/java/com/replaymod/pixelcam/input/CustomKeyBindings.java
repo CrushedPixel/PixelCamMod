@@ -3,6 +3,7 @@ package com.replaymod.pixelcam.input;
 import com.replaymod.pixelcam.TiltHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -19,6 +20,13 @@ public class CustomKeyBindings {
 
     private final List<CustomKeyBinding> customKeyBindings = new ArrayList<>();
 
+    private final CustomKeyBinding addPoint = new CustomKeyBinding("pixelcam.input.addPoint", Keyboard.KEY_P, "pixelcam.title", false) {
+        @Override
+        public void onPressed() {
+            ClientCommandHandler.instance.executeCommand(mc.thePlayer, "/cam p");
+        }
+    };
+
     private final CustomKeyBinding tiltLeft = new CustomKeyBinding("pixelcam.input.tiltLeft", Keyboard.KEY_J, "pixelcam.title", false) {
         @Override
         public void onPressed() {
@@ -27,7 +35,7 @@ public class CustomKeyBindings {
 
         @Override
         public boolean checkPressed(boolean guiScreen) {
-            return Keyboard.isKeyDown(getKeyCode());
+            return Keyboard.isKeyDown(getKeyCode()) && mc.currentScreen == null;
         }
     };
 
@@ -39,7 +47,7 @@ public class CustomKeyBindings {
 
         @Override
         public boolean checkPressed(boolean guiScreen) {
-            return Keyboard.isKeyDown(getKeyCode());
+            return Keyboard.isKeyDown(getKeyCode()) && mc.currentScreen == null;
         }
     };
 
@@ -52,10 +60,13 @@ public class CustomKeyBindings {
     };
 
     public CustomKeyBindings() {
+        customKeyBindings.add(addPoint);
         customKeyBindings.add(tiltLeft);
         customKeyBindings.add(tiltRight);
         customKeyBindings.add(tiltReset);
+    }
 
+    public void register() {
         List<KeyBinding> bindings = new ArrayList<KeyBinding>(Arrays.asList(mc.gameSettings.keyBindings));
         bindings.addAll(customKeyBindings);
 

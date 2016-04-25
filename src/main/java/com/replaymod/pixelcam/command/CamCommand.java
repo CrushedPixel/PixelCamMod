@@ -1,8 +1,10 @@
 package com.replaymod.pixelcam.command;
 
 import com.replaymod.pixelcam.TiltHandler;
+import com.replaymod.pixelcam.interpolation.Interpolation;
 import com.replaymod.pixelcam.path.CameraPath;
 import com.replaymod.pixelcam.path.Position;
+import com.replaymod.pixelcam.path.TravellingProcess;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
@@ -15,15 +17,25 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.ArrayUtils;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.text.DecimalFormat;
 
 public class CamCommand extends CommandBase {
 
-    private Minecraft mc = Minecraft.getMinecraft();
+    private static Minecraft mc = Minecraft.getMinecraft();
     private static final String COMMAND_NAME = "cam";
 
+    private static final PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
+            .appendHours().appendSuffix("h")
+            .appendMinutes().appendSuffix("min")
+            .appendSeconds().appendSuffix("s")
+            .toFormatter();
+
     private CameraPath cameraPath = new CameraPath();
+
+    private TravellingProcess travellingProcess;
 
     @Override
     public int getRequiredPermissionLevel() {
@@ -131,13 +143,40 @@ public class CamCommand extends CommandBase {
     }
 
     private void start(String[] args) throws CommandException {
-        if(args.length != 1) throw new WrongUsageException("pixelcam.commands.cam.start.usage");
-        //TODO
+        if(args.length < 1 || args.length > 2) throw new WrongUsageException("pixelcam.commands.cam.start.usage");
+        long duration = periodFormatter.parsePeriod(args[0]).toStandardDuration().getMillis();
+
+        CameraPath.InterpolationType type = CameraPath.InterpolationType.SPLINE;
+
+        if(args.length == 2) {
+            if(args[1].equalsIgnoreCase("linear")) {
+                type = CameraPath.InterpolationType.LINEAR;
+            } else if(args[1].equalsIgnoreCase("spline")) {
+                type = CameraPath.InterpolationType.SPLINE;
+            } else {
+                throw new CommandException("pixelcam.commands.cam.error.interpolation", args[1]);
+            }
+        }
+
+        Interpolation<Position> interpolation = cameraPath.getInterpolation(type);
+
+        if(travellingProcess != null && travellingProcess.isActive()) {
+            travellingProcess.stop();
+        }
+
+        travellingProcess = new TravellingProcess(interpolation, duration);
+        travellingProcess.start();
+
+        sendSuccessMessage(new TextComponentTranslation("pixelcam.commands.cam.start.started"));
     }
 
     private void stop(String[] args) throws CommandException {
         if(args.length != 0) throw new WrongUsageException("pixelcam.commands.cam.stop.usage");
-        //TODO
+
+        if(travellingProcess != null && travellingProcess.isActive()) {
+            travellingProcess.stop();
+            CamCommand.sendSuccessMessage(new TextComponentTranslation("pixelcam.commands.cam.stop.success"));
+        }
     }
 
     private void help(String[] args) throws CommandException {
@@ -159,7 +198,7 @@ public class CamCommand extends CommandBase {
         return new DecimalFormat("#.00").format(value);
     }
     
-    private void sendSuccessMessage(ITextComponent message) {
+    public static void sendSuccessMessage(ITextComponent message) {
         mc.thePlayer.addChatMessage(message.setChatStyle(new Style().setColor(TextFormatting.DARK_GREEN)));
     }
 

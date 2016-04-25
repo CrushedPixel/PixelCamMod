@@ -15,7 +15,7 @@ public class PixelCamMod {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        new CustomKeyBindings();
+        new CustomKeyBindings().register();
 
         CamCommand command = new CamCommand();
         ClientCommandHandler.instance.registerCommand(command);
