@@ -29,4 +29,5 @@ pixelcam.commands.cam.clear.success.all=Removed all points
 pixelcam.commands.cam.goto.success=Teleported to point %1$s at (%2$s/%3$s/%4$s/%5$s/%6$s/%7$s)
 pixelcam.commands.cam.stop.success=Travelling stopped
 pixelcam.commands.cam.start.started=Travelling started
+pixelcam.commands.cam.start.tooFewPoints=At least 2 points required to start travelling
 pixelcam.commands.cam.start.finished=Travelling finished

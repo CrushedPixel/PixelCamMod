@@ -14,19 +14,19 @@ public class SplineInterpolation implements Interpolation<Position> {
 
     @Override
     public void addPoint(Position point) {
-        double normalizedYaw = (point.getYaw() + 180) % 360;
+        double normalizedYaw = (point.getYaw() - 180) % 360;
         double normalizedTilt = (point.getTilt()) % 360;
 
         if(!points.isEmpty()) {
             Position last = points.get(points.size() - 1);
 
-            double yaw = InterpolationUtils.fixEulerRotation(last.getYaw(), point.getYaw(), 180);
+            double yaw = InterpolationUtils.fixEulerRotation(last.getYaw(), point.getYaw(), -180);
             double tilt = InterpolationUtils.fixEulerRotation(last.getTilt(), point.getTilt(), 0);
 
             point.setYaw(yaw);
             point.setTilt(tilt);
         } else {
-            point.setYaw(normalizedYaw - 180);
+            point.setYaw(normalizedYaw + 180);
             point.setTilt(normalizedTilt);
         }
 

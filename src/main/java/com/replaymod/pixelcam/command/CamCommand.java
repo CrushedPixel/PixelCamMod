@@ -1,5 +1,6 @@
 package com.replaymod.pixelcam.command;
 
+import com.replaymod.pixelcam.PathVisualizer;
 import com.replaymod.pixelcam.TiltHandler;
 import com.replaymod.pixelcam.interpolation.Interpolation;
 import com.replaymod.pixelcam.path.CameraPath;
@@ -12,15 +13,18 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandNotFoundException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.client.ClientCommandHandler;
 import org.apache.commons.lang3.ArrayUtils;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 public class CamCommand extends CommandBase {
 
@@ -33,9 +37,19 @@ public class CamCommand extends CommandBase {
             .appendSeconds().appendSuffix("s")
             .toFormatter();
 
-    private CameraPath cameraPath = new CameraPath();
+    private final CameraPath cameraPath = new CameraPath();
 
     private TravellingProcess travellingProcess;
+
+    private final PathVisualizer pathVisualizer = new PathVisualizer(cameraPath);
+
+    public boolean isTravelling() {
+        return travellingProcess != null && travellingProcess.isActive();
+    }
+
+    public void register() {
+        ClientCommandHandler.instance.registerCommand(this);
+    }
 
     @Override
     public int getRequiredPermissionLevel() {
@@ -137,7 +151,7 @@ public class CamCommand extends CommandBase {
             return null;
         }
 
-        if(i-1 < 0 || i-1 > cameraPath.getPointCount()) return null;
+        if(i-1 < 0 || i-1 >= cameraPath.getPointCount()) return null;
 
         return i-1;
     }
@@ -156,6 +170,10 @@ public class CamCommand extends CommandBase {
             } else {
                 throw new CommandException("pixelcam.commands.cam.error.interpolation", args[1]);
             }
+        }
+
+        if(cameraPath.getPointCount() < 2) {
+            throw new CommandException("pixelcam.commands.cam.start.tooFewPoints");
         }
 
         Interpolation<Position> interpolation = cameraPath.getInterpolation(type);
@@ -202,4 +220,12 @@ public class CamCommand extends CommandBase {
         mc.thePlayer.addChatMessage(message.setChatStyle(new Style().setColor(TextFormatting.DARK_GREEN)));
     }
 
+    @Override
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+        if(args.length < 2) {
+            return getListOfStringsMatchingLastWord(args, "p", "goto", "clear", "start", "stop", "help");
+        }
+
+        return super.getTabCompletionOptions(server, sender, args, pos);
+    }
 }

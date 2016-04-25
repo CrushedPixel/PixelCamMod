@@ -4,6 +4,7 @@ import com.replaymod.pixelcam.interpolation.Interpolation;
 import com.replaymod.pixelcam.interpolation.LinearInterpolation;
 import com.replaymod.pixelcam.interpolation.SplineInterpolation;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,6 +30,10 @@ public class CameraPath {
 
     public int getPointCount() {
         return points.size();
+    }
+
+    public List<Position> getPoints() {
+        return new ArrayList<>(points);
     }
 
     public Position getPoint(int index) {
