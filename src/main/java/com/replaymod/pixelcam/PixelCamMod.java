@@ -1,6 +1,6 @@
 package com.replaymod.pixelcam;
 
-import com.replaymod.pixelcam.input.CamCommand;
+import com.replaymod.pixelcam.command.CamCommand;
 import com.replaymod.pixelcam.input.CustomKeyBindings;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.Mod;
