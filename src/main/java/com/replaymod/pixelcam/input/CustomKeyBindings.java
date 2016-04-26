@@ -1,6 +1,7 @@
 package com.replaymod.pixelcam.input;
 
-import com.replaymod.pixelcam.TiltHandler;
+import com.replaymod.pixelcam.PixelCamMod;
+import com.replaymod.pixelcam.renderer.TiltHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
@@ -29,6 +30,13 @@ public class CustomKeyBindings {
         @Override
         public void onPressed() {
             ClientCommandHandler.instance.executeCommand(mc.thePlayer, "/cam p");
+        }
+    };
+
+    private final CustomKeyBinding togglePathVisualization = new CustomKeyBinding("pixelcam.input.toggleVisualization", Keyboard.KEY_O, "pixelcam.title", false) {
+        @Override
+        public void onPressed() {
+            PixelCamMod.instance.camCommand.getPathVisualizer().togglePathVisibility();
         }
     };
 
@@ -65,6 +73,7 @@ public class CustomKeyBindings {
 
     public CustomKeyBindings() {
         customKeyBindings.add(addPoint);
+        customKeyBindings.add(togglePathVisualization);
         customKeyBindings.add(tiltLeft);
         customKeyBindings.add(tiltRight);
         customKeyBindings.add(tiltReset);

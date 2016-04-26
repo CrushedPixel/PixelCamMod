@@ -1,8 +1,9 @@
 package com.replaymod.pixelcam.command;
 
-import com.replaymod.pixelcam.PathVisualizer;
-import com.replaymod.pixelcam.TiltHandler;
+import com.replaymod.pixelcam.renderer.PathVisualizer;
+import com.replaymod.pixelcam.renderer.TiltHandler;
 import com.replaymod.pixelcam.interpolation.Interpolation;
+import com.replaymod.pixelcam.interpolation.InterpolationType;
 import com.replaymod.pixelcam.path.CameraPath;
 import com.replaymod.pixelcam.path.Position;
 import com.replaymod.pixelcam.path.TravellingProcess;
@@ -45,6 +46,10 @@ public class CamCommand extends CommandBase {
 
     public boolean isTravelling() {
         return travellingProcess != null && travellingProcess.isActive();
+    }
+
+    public PathVisualizer getPathVisualizer() {
+        return pathVisualizer;
     }
 
     public void register() {
@@ -160,13 +165,13 @@ public class CamCommand extends CommandBase {
         if(args.length < 1 || args.length > 2) throw new WrongUsageException("pixelcam.commands.cam.start.usage");
         long duration = periodFormatter.parsePeriod(args[0]).toStandardDuration().getMillis();
 
-        CameraPath.InterpolationType type = CameraPath.InterpolationType.SPLINE;
+        InterpolationType type = InterpolationType.SPLINE;
 
         if(args.length == 2) {
             if(args[1].equalsIgnoreCase("linear")) {
-                type = CameraPath.InterpolationType.LINEAR;
+                type = InterpolationType.LINEAR;
             } else if(args[1].equalsIgnoreCase("spline")) {
-                type = CameraPath.InterpolationType.SPLINE;
+                type = InterpolationType.SPLINE;
             } else {
                 throw new CommandException("pixelcam.commands.cam.error.interpolation", args[1]);
             }

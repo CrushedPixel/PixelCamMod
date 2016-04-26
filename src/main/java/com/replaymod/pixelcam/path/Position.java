@@ -1,6 +1,6 @@
 package com.replaymod.pixelcam.path;
 
-import com.replaymod.pixelcam.TiltHandler;
+import com.replaymod.pixelcam.renderer.TiltHandler;
 import com.replaymod.pixelcam.interpolation.Interpolate;
 import net.minecraft.entity.Entity;
 

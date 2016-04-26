@@ -8,4 +8,6 @@ public interface Interpolation<T> {
 
     void addPoint(T pos);
 
+    InterpolationType getInterpolationType();
+
 }

@@ -161,4 +161,8 @@ public class SplineInterpolation implements Interpolation<Position> {
         }
     }
 
+    @Override
+    public InterpolationType getInterpolationType() {
+        return InterpolationType.SPLINE;
+    }
 }

@@ -1,7 +1,7 @@
 package com.replaymod.pixelcam.path;
 
 import com.google.common.base.Preconditions;
-import com.replaymod.pixelcam.TiltHandler;
+import com.replaymod.pixelcam.renderer.TiltHandler;
 import com.replaymod.pixelcam.command.CamCommand;
 import com.replaymod.pixelcam.interpolation.Interpolation;
 import net.minecraft.client.Minecraft;

@@ -1,5 +1,8 @@
-package com.replaymod.pixelcam;
+package com.replaymod.pixelcam.renderer;
 
+import com.replaymod.pixelcam.PixelCamMod;
+import com.replaymod.pixelcam.interpolation.Interpolation;
+import com.replaymod.pixelcam.interpolation.InterpolationType;
 import com.replaymod.pixelcam.path.CameraPath;
 import com.replaymod.pixelcam.path.Position;
 import net.minecraft.client.Minecraft;
@@ -14,6 +17,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.Color;
+
 public class PathVisualizer {
 
     private Minecraft mc = Minecraft.getMinecraft();
@@ -22,14 +27,22 @@ public class PathVisualizer {
 
     private final CameraPath cameraPath;
 
+    private PathVisibility pathVisibility = PathVisibility.SPLINE;
+
     public PathVisualizer(CameraPath cameraPath) {
         this.cameraPath = cameraPath;
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    public void togglePathVisibility() {
+        pathVisibility = pathVisibility.next();
+    }
+
     @SubscribeEvent
     public void onRender(RenderWorldLastEvent event) {
-        if(cameraPath.getPointCount() == 0 || PixelCamMod.instance.camCommand.isTravelling()) return;
+        if(pathVisibility == PathVisibility.NONE
+                || cameraPath.getPointCount() == 0
+                || PixelCamMod.instance.camCommand.isTravelling()) return;
 
         Entity entity = mc.getRenderViewEntity();
 
@@ -47,11 +60,33 @@ public class PathVisualizer {
         GlStateManager.enableBlend();
 
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        for(Position pos : cameraPath.getPoints()) {
-            if(prev != null) drawConnection(doubleX, doubleY, doubleZ, prev, pos);
-            prev = pos;
+
+        if(pathVisibility == PathVisibility.LINEAR || pathVisibility == PathVisibility.BOTH) {
+            for(Position pos : cameraPath.getPoints()) {
+                if(prev != null) drawConnection(doubleX, doubleY, doubleZ, prev, pos, Color.RED);
+                prev = pos;
+            }
         }
 
+        if(pathVisibility == PathVisibility.SPLINE || pathVisibility == PathVisibility.BOTH) {
+            Interpolation<Position> interpolation = cameraPath.getInterpolation(InterpolationType.SPLINE);
+
+            prev = null;
+
+            for(int i = 0; i < cameraPath.getPointCount(); i++) {
+                //draw 100 connection lines between the two points
+                for(int j = 0; j < 100; j++) {
+                    float k = (i / (float) cameraPath.getPointCount()) + (j / 100f * 1f / cameraPath.getPointCount());
+                    Position pos = new Position();
+
+                    interpolation.applyPoint(k, pos);
+
+                    if(prev != null) drawConnection(doubleX, doubleY, doubleZ, prev, pos, Color.GREEN);
+
+                    prev = pos;
+                }
+            }
+        }
 
         GlStateManager.blendFunc(GL11.GL_DST_COLOR, GL11.GL_SRC_COLOR);
 
@@ -113,7 +148,7 @@ public class PathVisualizer {
         GlStateManager.popMatrix();
     }
 
-    private void drawConnection(double playerX, double playerY, double playerZ, Position pos1, Position pos2) {
+    private void drawConnection(double playerX, double playerY, double playerZ, Position pos1, Position pos2, Color color) {
         GlStateManager.pushMatrix();
         GlStateManager.pushAttrib();
 
@@ -125,7 +160,7 @@ public class PathVisualizer {
 
         GlStateManager.disableTexture2D();
 
-        GlStateManager.color(1, 0, 0, 0.5f);
+        GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(), 0.5f);
 
         VertexBuffer vb = Tessellator.getInstance().getBuffer();
 

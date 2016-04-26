@@ -11,7 +11,7 @@ import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 
 public class CameraTiltCT implements IClassTransformer {
 
-    private static final String TILT_HANDLER = "com/replaymod/pixelcam/TiltHandler";
+    private static final String TILT_HANDLER = "com/replaymod/pixelcam/renderer/TiltHandler";
     private static final String CLASS_NAME = "net.minecraft.client.renderer.EntityRenderer";
 
     private static final String ORIENT_CAMERA = "orientCamera";

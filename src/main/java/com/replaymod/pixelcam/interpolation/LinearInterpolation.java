@@ -74,5 +74,9 @@ public class LinearInterpolation implements Interpolation<Position> {
         return val1 + ((val2 - val1) * perc);
     }
 
+    @Override
+    public InterpolationType getInterpolationType() {
+        return InterpolationType.LINEAR;
+    }
 
 }

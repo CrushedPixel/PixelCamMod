@@ -1,4 +1,4 @@
-package com.replaymod.pixelcam;
+package com.replaymod.pixelcam.renderer;
 
 public class TiltHandler {
 

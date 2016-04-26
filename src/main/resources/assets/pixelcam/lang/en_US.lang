@@ -1,6 +1,7 @@
 pixelcam.title=PixelCam
 
 pixelcam.input.addPoint=Add Point
+pixelcam.input.toggleVisualization=Toggle Path Visualization
 pixelcam.input.tiltLeft=Tilt Camera Left
 pixelcam.input.tiltRight=Tilt Camera Right
 pixelcam.input.tiltReset=Reset Camera Tilt
