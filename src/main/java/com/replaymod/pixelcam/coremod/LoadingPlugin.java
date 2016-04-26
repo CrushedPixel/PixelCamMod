@@ -4,11 +4,9 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 import java.util.Map;
 
+@IFMLLoadingPlugin.MCVersion("1.9")
+@IFMLLoadingPlugin.Name("PixelCamTilt")
 public class LoadingPlugin implements IFMLLoadingPlugin {
-
-    public LoadingPlugin() {
-        System.out.println("dis shit been constructed");
-    }
 
     @Override
     public String[] getASMTransformerClass() {

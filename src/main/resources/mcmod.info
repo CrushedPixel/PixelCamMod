@@ -5,7 +5,7 @@
   "description": "A cinematic tool to create smooth camera movements along a path.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "http://crushedpixel.eu/pixelcam",
   "updateUrl": "",
   "authorList": ["CrushedPixel"],
   "logoFile": "",

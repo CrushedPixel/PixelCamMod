@@ -5,7 +5,7 @@ import com.replaymod.pixelcam.input.CustomKeyBindings;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
-@Mod(modid = PixelCamMod.MODID, useMetadata = true)
+@Mod(modid = PixelCamMod.MODID, clientSideOnly = true, useMetadata = true, acceptedMinecraftVersions = "1.9")
 public class PixelCamMod {
     public static final String MODID = "pixelcam";
 
