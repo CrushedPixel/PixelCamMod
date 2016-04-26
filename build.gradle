@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
@@ -8,10 +8,12 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.11.0'
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'license'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -19,6 +21,12 @@ targetCompatibility = 1.7
 version = "0.1"
 group = "com.replaymod.pixelcam"
 archivesBaseName = "pixelcam"
+
+ext.projectName = 'PixelCam Mod'
+ext.packaging = 'jar'
+ext.author = 'CrushedPixel'
+ext.authorUrl = 'http://crushedpixel.eu'
+ext.inceptionYear = '2016'
 
 minecraft {
     coreMod = "com.replaymod.pixelcam.coremod.LoadingPlugin"
@@ -70,6 +78,20 @@ jar {
 
     manifest {
         attributes 'FMLCorePluginContainsFMLMod': 'eu.crushedpixel.replaymod.coremod.LoadingPlugin'
+    }
+}
+
+license {
+    ext.name = project.projectName
+    ext.author = project.author
+    ext.url = project.authorUrl
+    ext.year = project.inceptionYear
+    header new File(project.getProjectDir(), 'HEADER.txt')
+    sourceSets = project.sourceSets
+    ignoreFailures false
+    strictCheck true
+    mapping {
+        java = 'SLASHSTAR_STYLE'
     }
 }
 
