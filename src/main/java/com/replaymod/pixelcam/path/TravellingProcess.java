@@ -58,6 +58,11 @@ public class TravellingProcess {
         interpolation.applyPoint(progress, pos);
 
         mc.thePlayer.setPositionAndRotation(pos.getX(), pos.getY(), pos.getZ(), pos.getYaw(), pos.getPitch());
+
+        //this fixes camera jerking
+        mc.thePlayer.prevRotationYaw = mc.thePlayer.rotationYaw;
+        mc.thePlayer.prevRotationPitch = mc.thePlayer.rotationPitch;
+
         TiltHandler.setTilt(pos.getTilt());
 
         if(progress >= 1) {

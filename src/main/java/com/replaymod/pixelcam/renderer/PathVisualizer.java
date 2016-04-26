@@ -160,7 +160,7 @@ public class PathVisualizer {
 
         GlStateManager.disableTexture2D();
 
-        GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(), 0.5f);
+        GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(), 0.7f);
 
         VertexBuffer vb = Tessellator.getInstance().getBuffer();
 

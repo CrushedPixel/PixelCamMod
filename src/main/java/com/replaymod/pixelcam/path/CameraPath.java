@@ -49,7 +49,7 @@ public class CameraPath {
 
     public Interpolation<Position> getInterpolation(InterpolationType type) {
 
-        if(interpolation == null || interpolation.getInterpolationType() != type) {
+        if(interpolation == null || (interpolation.getInterpolationType() != type && points.size() > 2)) {
             interpolation = (type == InterpolationType.LINEAR || points.size() < 3)
                             ? new LinearInterpolation() : new SplineInterpolation();
 
