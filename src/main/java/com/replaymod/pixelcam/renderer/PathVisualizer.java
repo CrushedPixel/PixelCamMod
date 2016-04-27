@@ -108,8 +108,10 @@ public class PathVisualizer {
 
         GlStateManager.blendFunc(GL11.GL_DST_COLOR, GL11.GL_SRC_COLOR);
 
+        int index = 1;
         for(Position pos : cameraPath.getPoints()) {
-            drawPoint(doubleX, doubleY, doubleZ, pos);
+            drawPoint(doubleX, doubleY, doubleZ, pos, index);
+            index++;
         }
 
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -119,9 +121,11 @@ public class PathVisualizer {
         GlStateManager.popAttrib();
     }
 
-    private void drawPoint(double playerX, double playerY, double playerZ, Position pos) {
+    private void drawPoint(double playerX, double playerY, double playerZ, Position pos, int index) {
         GlStateManager.pushMatrix();
         GlStateManager.pushAttrib();
+
+        GlStateManager.enableBlend();
 
         GlStateManager.color(1, 1, 1, 0.5f);
 
@@ -161,6 +165,11 @@ public class PathVisualizer {
         vb.setTranslation(0, 0, 0);
 
         GlStateManager.disableBlend();
+
+        GlStateManager.rotate(180, 0, 0, 1);
+        GlStateManager.scale(0.05f, 0.05f, 0.05f);
+        GlStateManager.translate(-2.5, -3.5, -0.1);
+        mc.fontRendererObj.drawString(String.valueOf(index), 0, 0, Color.BLACK.getRGB());
 
         GlStateManager.popAttrib();
         GlStateManager.popMatrix();
