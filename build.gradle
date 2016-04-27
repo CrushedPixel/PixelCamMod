@@ -18,7 +18,7 @@ apply plugin: 'license'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-version = "0.1"
+version = "1.0"
 group = "com.replaymod.pixelcam"
 archivesBaseName = "pixelcam"
 
@@ -77,7 +77,7 @@ jar {
     }
 
     manifest {
-        attributes 'FMLCorePluginContainsFMLMod': 'eu.crushedpixel.replaymod.coremod.LoadingPlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'com.replaymod.pixelcam.coremod.LoadingPlugin'
     }
 }
 
