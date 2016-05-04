@@ -19,9 +19,9 @@
 package com.replaymod.pixelcam.path;
 
 import com.google.common.base.Preconditions;
-import com.replaymod.pixelcam.renderer.TiltHandler;
 import com.replaymod.pixelcam.command.CamCommand;
 import com.replaymod.pixelcam.interpolation.Interpolation;
+import com.replaymod.pixelcam.renderer.TiltHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,6 +34,8 @@ public class TravellingProcess {
 
     private final Interpolation<Position> interpolation;
     private final long duration;
+
+    private boolean wasSpectator;
 
     private long startTime;
 
@@ -53,12 +55,17 @@ public class TravellingProcess {
     public void start() {
         Preconditions.checkState(!active);
 
+        wasSpectator = mc.thePlayer.isSpectator();
+        mc.thePlayer.sendChatMessage("/gamemode 3");
+
         startTime = System.currentTimeMillis();
         active = true;
     }
 
     public void stop() {
         Preconditions.checkState(active);
+
+        if(!wasSpectator) mc.thePlayer.sendChatMessage("/gamemode 1");
 
         active = false;
     }
@@ -85,7 +92,7 @@ public class TravellingProcess {
 
         if(progress >= 1) {
             CamCommand.sendSuccessMessage(new TextComponentTranslation("pixelcam.commands.cam.start.finished"));
-            active = false;
+            stop();
         }
     }
 
