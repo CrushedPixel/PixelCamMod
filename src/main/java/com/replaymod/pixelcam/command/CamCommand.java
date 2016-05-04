@@ -79,7 +79,7 @@ public class CamCommand extends CommandBase {
 
     @Override
     public int getRequiredPermissionLevel() {
-        return 1;
+        return 0;
     }
 
     @Override
@@ -95,6 +95,7 @@ public class CamCommand extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         if(sender != mc.thePlayer) throw new CommandException("commands.generic.permission");
+        if(!mc.thePlayer.isCreative() && !mc.thePlayer.isSpectator()) throw new CommandException("pixelcam.commands.error.gamemode");
 
         if(args.length <= 0) throw new CommandException(getCommandUsage(sender));
 

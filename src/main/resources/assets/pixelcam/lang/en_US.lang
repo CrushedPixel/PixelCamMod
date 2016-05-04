@@ -37,3 +37,4 @@ pixelcam.commands.cam.start.finished=Travelling finished
 pixelcam.commands.cam.focus.set=Set focus point to (%1$s/%2$s/%3$s)
 pixelcam.commands.cam.focus.enabled=Focus point enabled
 pixelcam.commands.cam.focus.disabled=Focus point disabled
+pixelcam.commands.error.gamemode=You have to be in Creative or Spectator mode to execute this command.
