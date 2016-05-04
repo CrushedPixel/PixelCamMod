@@ -185,18 +185,30 @@ public class CamCommand extends CommandBase {
     }
 
     private void start(String[] args) throws CommandException {
-        if(args.length < 1 || args.length > 2) throw new WrongUsageException("pixelcam.commands.cam.start.usage");
+        if(args.length < 1 || args.length > 3) throw new WrongUsageException("pixelcam.commands.cam.start.usage");
         long duration = periodFormatter.parsePeriod(args[0]).toStandardDuration().getMillis();
+
+        boolean repeat = false;
 
         InterpolationType type = InterpolationType.SPLINE;
 
-        if(args.length == 2) {
+        if(args.length > 1) {
             if(args[1].equalsIgnoreCase("linear")) {
                 type = InterpolationType.LINEAR;
             } else if(args[1].equalsIgnoreCase("spline")) {
                 type = InterpolationType.SPLINE;
+            } else if(args[1].equalsIgnoreCase("repeat") && args.length == 2) {
+                repeat = true;
             } else {
-                throw new CommandException("pixelcam.commands.cam.error.interpolation", args[1]);
+                throw new WrongUsageException("pixelcam.commands.cam.start.usage");
+            }
+
+            if(args.length == 3) {
+                if(args[2].equalsIgnoreCase("repeat")) {
+                    repeat = true;
+                } else {
+                    throw new WrongUsageException("pixelcam.commands.cam.start.usage");
+                }
             }
         }
 
@@ -211,7 +223,7 @@ public class CamCommand extends CommandBase {
         }
 
         travellingProcess = new TravellingProcess(interpolation, duration);
-        travellingProcess.start();
+        travellingProcess.start(repeat);
 
         sendSuccessMessage(new TextComponentTranslation("pixelcam.commands.cam.start.started"));
     }
@@ -281,7 +293,7 @@ public class CamCommand extends CommandBase {
     }
 
     private Position parseXYZ(String xIn, String yIn, String zIn) throws CommandException {
-       double x = parseCoordinate(mc.thePlayer.posX, xIn, true).func_179628_a();
+        double x = parseCoordinate(mc.thePlayer.posX, xIn, true).func_179628_a();
         double y = parseCoordinate(mc.thePlayer.posY, yIn, true).func_179628_a();
         double z = parseCoordinate(mc.thePlayer.posZ, zIn, true).func_179628_a();
 

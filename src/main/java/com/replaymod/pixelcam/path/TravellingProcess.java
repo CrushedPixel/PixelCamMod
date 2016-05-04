@@ -41,6 +41,8 @@ public class TravellingProcess {
 
     private boolean active;
 
+    private boolean repeat;
+
     public boolean isActive() {
         return active;
     }
@@ -52,8 +54,9 @@ public class TravellingProcess {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    public void start() {
+    public void start(boolean repeat) {
         Preconditions.checkState(!active);
+        this.repeat = repeat;
 
         wasSpectator = mc.thePlayer.isSpectator();
         mc.thePlayer.sendChatMessage("/gamemode 3");
@@ -91,8 +94,12 @@ public class TravellingProcess {
         TiltHandler.setTilt(pos.getTilt());
 
         if(progress >= 1) {
-            CamCommand.sendSuccessMessage(new TextComponentTranslation("pixelcam.commands.cam.start.finished"));
-            stop();
+            if(!repeat) {
+                CamCommand.sendSuccessMessage(new TextComponentTranslation("pixelcam.commands.cam.start.finished"));
+                stop();
+            } else {
+                startTime = System.currentTimeMillis();
+            }
         }
     }
 
