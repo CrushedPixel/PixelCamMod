@@ -147,7 +147,7 @@ public class CamCommand extends CommandBase {
 
         //success message
         sendSuccessMessage(new TextComponentTranslation("pixelcam.commands.cam.goto.success", index+1,
-                round2(pos.getX()), round2(pos.getY()), round2(pos.getZ()), round2(pos.getYaw()), round2(pos.getPitch()), pos.getTilt()));
+                round2(pos.getX()), round2(pos.getY()), round2(pos.getZ()), round2(pos.getYaw()), round2(pos.getPitch()), pos.getTilt(), pos.getFov()));
     }
 
     private void p(String[] args) throws CommandException {
@@ -167,7 +167,7 @@ public class CamCommand extends CommandBase {
 
         //success message
         sendSuccessMessage(new TextComponentTranslation("pixelcam.commands.cam.p.success", index+1,
-                round2(pos.getX()), round2(pos.getY()), round2(pos.getZ()), round2(pos.getYaw()), round2(pos.getPitch()), pos.getTilt()));
+                round2(pos.getX()), round2(pos.getY()), round2(pos.getZ()), round2(pos.getYaw()), round2(pos.getPitch()), pos.getTilt(), pos.getFov()));
     }
 
     private Integer parsePathIndex(String index) {
@@ -297,7 +297,7 @@ public class CamCommand extends CommandBase {
         double y = parseCoordinate(mc.thePlayer.posY, yIn, true).func_179628_a();
         double z = parseCoordinate(mc.thePlayer.posZ, zIn, true).func_179628_a();
 
-        return new Position(x, y, z, 0, 0, 0);
+        return new Position(x, y, z, 0, 0, 0, mc.gameSettings.fovSetting);
     }
 
     private String round2(double value) {

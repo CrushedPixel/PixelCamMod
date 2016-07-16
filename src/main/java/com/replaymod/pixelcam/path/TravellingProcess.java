@@ -92,6 +92,7 @@ public class TravellingProcess {
         mc.thePlayer.prevRotationPitch = mc.thePlayer.rotationPitch;
 
         TiltHandler.setTilt(pos.getTilt());
+        mc.gameSettings.fovSetting = (float) pos.getFov();
 
         if(progress >= 1) {
             if(!repeat) {
