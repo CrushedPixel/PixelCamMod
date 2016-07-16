@@ -20,6 +20,7 @@ package com.replaymod.pixelcam.path;
 
 import com.replaymod.pixelcam.renderer.TiltHandler;
 import com.replaymod.pixelcam.interpolation.Interpolate;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 
 public class Position {
@@ -42,17 +43,21 @@ public class Position {
     @Interpolate
     public double tilt;
 
-    public Position(double x, double y, double z, float yaw, float pitch, float tilt) {
+    @Interpolate
+    public double fov;
+
+    public Position(double x, double y, double z, float yaw, float pitch, float tilt, float fov) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.yaw = yaw;
         this.pitch = pitch;
         this.tilt = tilt;
+        this.fov = fov;
     }
 
     public Position(Entity entity) {
-        this(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch, TiltHandler.getTilt());
+        this(entity.posX, entity.posY, entity.posZ, entity.rotationYaw, entity.rotationPitch, TiltHandler.getTilt(), Minecraft.getMinecraft().gameSettings.fovSetting);
     }
 
     public Position() {
@@ -105,5 +110,13 @@ public class Position {
 
     public void setTilt(double tilt) {
         this.tilt = tilt;
+    }
+
+    public double getFov() {
+        return fov;
+    }
+
+    public void setFov(double fov) {
+        this.fov = fov;
     }
 }
