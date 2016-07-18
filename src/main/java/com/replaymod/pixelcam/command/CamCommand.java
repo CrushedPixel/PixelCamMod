@@ -293,9 +293,9 @@ public class CamCommand extends CommandBase {
     }
 
     private Position parseXYZ(String xIn, String yIn, String zIn) throws CommandException {
-        double x = parseCoordinate(mc.thePlayer.posX, xIn, true).func_179628_a();
-        double y = parseCoordinate(mc.thePlayer.posY, yIn, true).func_179628_a();
-        double z = parseCoordinate(mc.thePlayer.posZ, zIn, true).func_179628_a();
+        double x = parseCoordinate(mc.thePlayer.posX, xIn, true).getResult();
+        double y = parseCoordinate(mc.thePlayer.posY, yIn, true).getResult();
+        double z = parseCoordinate(mc.thePlayer.posZ, zIn, true).getResult();
 
         return new Position(x, y, z, 0, 0, 0, mc.gameSettings.fovSetting);
     }
@@ -305,7 +305,7 @@ public class CamCommand extends CommandBase {
     }
     
     public static void sendSuccessMessage(ITextComponent message) {
-        mc.thePlayer.addChatMessage(message.setChatStyle(new Style().setColor(TextFormatting.DARK_GREEN)));
+        mc.thePlayer.addChatMessage(message.setStyle(new Style().setColor(TextFormatting.DARK_GREEN)));
     }
 
     @Override
