@@ -35,7 +35,7 @@ public class PixelCamMod {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         new CustomKeyBindings().register();
-        camCommand = new CamCommand();
+        camCommand = new CamCommand(new PathSaveHandler());
         camCommand.register();
     }
 

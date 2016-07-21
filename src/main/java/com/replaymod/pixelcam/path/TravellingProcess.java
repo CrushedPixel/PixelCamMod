@@ -97,7 +97,7 @@ public class TravellingProcess {
 
         if(progress >= 1) {
             if(!repeat) {
-                CamCommand.sendSuccessMessage(new TextComponentTranslation("pixelcam.commands.cam.start.finished"));
+                CamCommand.sendMessage(new TextComponentTranslation("pixelcam.commands.cam.start.finished"));
                 stop();
             } else {
                 startTime = System.currentTimeMillis();
