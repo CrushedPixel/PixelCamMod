@@ -88,8 +88,9 @@ public class TravellingProcess {
         mc.thePlayer.setPositionAndRotation(pos.getX(), pos.getY(), pos.getZ(), pos.getYaw(), pos.getPitch());
 
         //this fixes camera jerking
-        mc.thePlayer.prevRotationYaw = mc.thePlayer.rotationYaw;
-        mc.thePlayer.prevRotationPitch = mc.thePlayer.rotationPitch;
+        mc.thePlayer.lastTickPosX = pos.getX();
+        mc.thePlayer.lastTickPosY = pos.getY();
+        mc.thePlayer.lastTickPosZ = pos.getZ();
 
         TiltHandler.setTilt(pos.getTilt());
         mc.gameSettings.fovSetting = (float) pos.getFov();
