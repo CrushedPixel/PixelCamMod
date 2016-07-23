@@ -35,7 +35,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class PathVisualizer {
 
@@ -166,10 +166,13 @@ public class PathVisualizer {
 
         GlStateManager.disableBlend();
 
+        String string = String.valueOf(index);
+        float scale = 0.05f/(string.length());
+
         GlStateManager.rotate(180, 0, 0, 1);
-        GlStateManager.scale(0.05f, 0.05f, 0.05f);
-        GlStateManager.translate(-2.5, -3.5, -0.1);
-        mc.fontRendererObj.drawString(String.valueOf(index), 0, 0, Color.BLACK.getRGB());
+        GlStateManager.scale(scale, scale, scale);
+        GlStateManager.translate(-mc.fontRendererObj.getStringWidth(string)/2+0.5, -3.5, -0.1);
+        mc.fontRendererObj.drawString(string, 0, 0, Color.BLACK.getRGB());
 
         GlStateManager.popAttrib();
         GlStateManager.popMatrix();

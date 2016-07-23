@@ -29,10 +29,18 @@ import java.util.List;
 
 public class CameraPath {
 
-    private final List<Position> points = new LinkedList<>();
+    private final List<Position> points;
 
     private Interpolation<Position> interpolation;
 
+    public CameraPath() {
+        this(new LinkedList<Position>());
+    }
+
+    public CameraPath(List<Position> points) {
+        this.points = points;
+    }
+    
     public int addPoint(Position position, int index) {
         if(index < 0) points.add(position);
         else points.add(index, position);
@@ -81,4 +89,9 @@ public class CameraPath {
         return interpolation;
     }
 
+    public void setPoints(List<Position> points) {
+        this.points.clear();
+        this.points.addAll(points);
+        interpolation = null;
+    }
 }

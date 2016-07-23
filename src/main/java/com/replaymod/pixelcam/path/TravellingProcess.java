@@ -87,16 +87,22 @@ public class TravellingProcess {
 
         mc.thePlayer.setPositionAndRotation(pos.getX(), pos.getY(), pos.getZ(), pos.getYaw(), pos.getPitch());
 
-        //this fixes camera jerking
-        mc.thePlayer.prevRotationYaw = mc.thePlayer.rotationYaw;
+        //this fixes camera jerking; setPositionAndRotation fights to keep prevRotationPitch and yaw within [-180, 180),
+        // but keeps rotationPitch and rotationYaw within [0, 360)
         mc.thePlayer.prevRotationPitch = mc.thePlayer.rotationPitch;
+        mc.thePlayer.prevRotationYaw = mc.thePlayer.rotationYaw;
+
+        //this fixes camera jittering
+        mc.thePlayer.lastTickPosX = pos.getX();
+        mc.thePlayer.lastTickPosY = pos.getY();
+        mc.thePlayer.lastTickPosZ = pos.getZ();
 
         TiltHandler.setTilt(pos.getTilt());
         mc.gameSettings.fovSetting = (float) pos.getFov();
 
         if(progress >= 1) {
             if(!repeat) {
-                CamCommand.sendSuccessMessage(new TextComponentTranslation("pixelcam.commands.cam.start.finished"));
+                CamCommand.sendMessage(new TextComponentTranslation("pixelcam.commands.cam.start.finished"));
                 stop();
             } else {
                 startTime = System.currentTimeMillis();
