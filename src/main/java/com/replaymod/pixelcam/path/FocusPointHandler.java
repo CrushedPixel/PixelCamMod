@@ -20,13 +20,33 @@ package com.replaymod.pixelcam.path;
 
 import com.replaymod.pixelcam.PixelCamMod;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.Timer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.lang.reflect.Field;
+
 public class FocusPointHandler {
 
+    private static Field MC_TIMER;
+
+    {
+        try {
+            try {
+                MC_TIMER = Minecraft.class.getDeclaredField("field_71428_T");
+            } catch(NoSuchFieldException e) {
+                MC_TIMER = Minecraft.class.getDeclaredField("timer");
+            }
+            MC_TIMER.setAccessible(true);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private final Minecraft mc = Minecraft.getMinecraft();
+
+    private Timer timer;
 
     private Position focusPoint;
 
@@ -34,6 +54,12 @@ public class FocusPointHandler {
 
     public FocusPointHandler() {
         MinecraftForge.EVENT_BUS.register(this);
+        try {
+            timer = (Timer) MC_TIMER.get(mc);
+        } catch(Exception e) {
+            timer = null;
+            e.printStackTrace();
+        }
     }
 
     public Position getFocusPoint() {
@@ -54,7 +80,7 @@ public class FocusPointHandler {
 
     @SubscribeEvent
     public void onRenderTick(TickEvent.RenderTickEvent event) {
-        if(!enabled || focusPoint == null || PixelCamMod.instance.camCommand.isTravelling()) return;
+        if(!enabled || focusPoint == null || PixelCamMod.instance.camCommand.isTravelling() || mc.thePlayer == null) return;
 
         double diffX = interpolate(mc.thePlayer.prevPosX, mc.thePlayer.posX) - focusPoint.getX();
         double diffY = interpolate(mc.thePlayer.prevPosY, mc.thePlayer.posY) + mc.thePlayer.eyeHeight - focusPoint.getY();
@@ -79,7 +105,8 @@ public class FocusPointHandler {
     }
 
     private double interpolate(double prevPos, double pos) {
-        return prevPos + ((pos - prevPos) * mc.getRenderPartialTicks());
+        float partial = timer == null ? 1 : timer.elapsedPartialTicks;
+        return prevPos + ((pos - prevPos) * partial);
     }
 
 }

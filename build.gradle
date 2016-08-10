@@ -18,7 +18,7 @@ apply plugin: 'license'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-version = "1.0"
+version = "1.1"
 group = "com.replaymod.pixelcam"
 archivesBaseName = "pixelcam"
 
@@ -30,9 +30,9 @@ ext.inceptionYear = '2016'
 
 minecraft {
     coreMod = "com.replaymod.pixelcam.coremod.LoadingPlugin"
-    version = " 1.10.2-12.18.1.2011"
+    version = "1.8.9-11.15.1.1722"
     runDir = "run"
-    mappings = "snapshot_20160518"
+    mappings = 'stable_22'
 }
 
 dependencies {

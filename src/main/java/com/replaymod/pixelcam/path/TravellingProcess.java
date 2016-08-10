@@ -23,7 +23,7 @@ import com.replaymod.pixelcam.command.CamCommand;
 import com.replaymod.pixelcam.interpolation.Interpolation;
 import com.replaymod.pixelcam.renderer.TiltHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -102,7 +102,7 @@ public class TravellingProcess {
 
         if(progress >= 1) {
             if(!repeat) {
-                CamCommand.sendMessage(new TextComponentTranslation("pixelcam.commands.cam.start.finished"));
+                CamCommand.sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.start.finished"));
                 stop();
             } else {
                 startTime = System.currentTimeMillis();

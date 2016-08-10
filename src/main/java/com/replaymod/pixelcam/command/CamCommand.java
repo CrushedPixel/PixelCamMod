@@ -34,13 +34,12 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandNotFoundException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.ClientCommandHandler;
 import org.apache.commons.lang3.ArrayUtils;
 import org.joda.time.format.PeriodFormatter;
@@ -105,9 +104,9 @@ public class CamCommand extends CommandBase {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         if(sender != mc.thePlayer) throw new CommandException("commands.generic.permission");
-        if(!mc.thePlayer.isCreative() && !mc.thePlayer.isSpectator()) throw new CommandException("pixelcam.commands.error.gamemode");
+        if(!mc.thePlayer.capabilities.isCreativeMode && !mc.thePlayer.isSpectator()) throw new CommandException("pixelcam.commands.error.gamemode");
 
         if(args.length <= 0) throw new CommandException(getCommandUsage(sender));
 
@@ -135,8 +134,8 @@ public class CamCommand extends CommandBase {
 
         String[] names = pathSaveHandler.listSaveNames();
 
-        sendMessage(new TextComponentTranslation("pixelcam.commands.cam.io.list.header"));
-        sendMessage(new TextComponentString(" " + Joiner.on(", ").join(Arrays.asList(names))), TextFormatting.WHITE);
+        sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.io.list.header"));
+        sendMessage(new ChatComponentText(" " + Joiner.on(", ").join(Arrays.asList(names))), EnumChatFormatting.WHITE);
     }
 
     private void load(String[] args) throws CommandException {
@@ -154,7 +153,7 @@ public class CamCommand extends CommandBase {
             throw new CommandException("pixelcam.commands.cam.io.load.notfound", e);
         }
 
-        sendMessage(new TextComponentTranslation("pixelcam.commands.cam.io.load.success", args[0]));
+        sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.io.load.success", args[0]));
     }
 
     private void save(String[] args) throws CommandException {
@@ -167,7 +166,7 @@ public class CamCommand extends CommandBase {
         } catch (IOException e) {
             throw new CommandException("pixelcam.commands.cam.io.save.ioexception", e);
         }
-        sendMessage(new TextComponentTranslation("pixelcam.commands.cam.io.save.success", args[0]));
+        sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.io.save.success", args[0]));
     }
 
 
@@ -184,10 +183,10 @@ public class CamCommand extends CommandBase {
 
         if(index == -1) {
             cameraPath.clear();
-            sendMessage(new TextComponentTranslation("pixelcam.commands.cam.clear.success.all"));
+            sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.clear.success.all"));
         } else {
             cameraPath.removePoint(index);
-            sendMessage(new TextComponentTranslation("pixelcam.commands.cam.clear.success.one", index+1));
+            sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.clear.success.one", index+1));
         }
 
     }
@@ -204,7 +203,7 @@ public class CamCommand extends CommandBase {
         TiltHandler.setTilt(pos.getTilt());
 
         //success message
-        sendMessage(new TextComponentTranslation("pixelcam.commands.cam.goto.success", index+1,
+        sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.goto.success", index+1,
                 round2(pos.getX()), round2(pos.getY()), round2(pos.getZ()), round2(pos.getYaw()), round2(pos.getPitch()), pos.getTilt(), pos.getFov()));
     }
 
@@ -224,7 +223,7 @@ public class CamCommand extends CommandBase {
         index = cameraPath.addPoint(pos, index);
 
         //success message
-        sendMessage(new TextComponentTranslation("pixelcam.commands.cam.p.success", index+1,
+        sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.p.success", index+1,
                 round2(pos.getX()), round2(pos.getY()), round2(pos.getZ()), round2(pos.getYaw()), round2(pos.getPitch()), pos.getTilt(), pos.getFov()));
     }
 
@@ -288,7 +287,7 @@ public class CamCommand extends CommandBase {
         travellingProcess = new TravellingProcess(interpolation, duration);
         travellingProcess.start(repeat);
 
-        sendMessage(new TextComponentTranslation("pixelcam.commands.cam.start.started"));
+        sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.start.started"));
     }
 
     private void stop(String[] args) throws CommandException {
@@ -296,7 +295,7 @@ public class CamCommand extends CommandBase {
 
         if(travellingProcess != null && travellingProcess.isActive()) {
             travellingProcess.stop();
-            CamCommand.sendMessage(new TextComponentTranslation("pixelcam.commands.cam.stop.success"));
+            CamCommand.sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.stop.success"));
         }
     }
 
@@ -306,7 +305,7 @@ public class CamCommand extends CommandBase {
         if(args[0].equalsIgnoreCase("disable")) {
             if(args.length > 1) throw new WrongUsageException("pixelcam.commands.cam.focus.usage");
             focusPointHandler.setEnabled(false);
-            sendMessage(new TextComponentTranslation("pixelcam.commands.cam.focus.disabled"));
+            sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.focus.disabled"));
 
         } else if(args[0].equalsIgnoreCase("enable")) {
             if(args.length != 1 && args.length != 4) throw new WrongUsageException("pixelcam.commands.cam.focus.usage");
@@ -315,23 +314,23 @@ public class CamCommand extends CommandBase {
             if(args.length == 1 && focusPointHandler.getFocusPoint() == null) {
                 Position pos = new Position(mc.thePlayer);
                 focusPointHandler.setFocusPoint(pos);
-                sendMessage(new TextComponentTranslation("pixelcam.commands.cam.focus.set",
+                sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.focus.set",
                         round2(pos.getX()), round2(pos.getY()), round2(pos.getZ())));
             }
 
             if(args.length == 4) {
                 Position pos = parseXYZ(args[1], args[2], args[3]);
                 focusPointHandler.setFocusPoint(pos);
-                sendMessage(new TextComponentTranslation("pixelcam.commands.cam.focus.set",
+                sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.focus.set",
                         round2(pos.getX()), round2(pos.getY()), round2(pos.getZ())));
             }
 
-            sendMessage(new TextComponentTranslation("pixelcam.commands.cam.focus.enabled"));
+            sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.focus.enabled"));
 
         } else if(args.length == 3) {
             Position pos = parseXYZ(args[0], args[1], args[2]);
             focusPointHandler.setFocusPoint(pos);
-            sendMessage(new TextComponentTranslation("pixelcam.commands.cam.focus.set",
+            sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.focus.set",
                     round2(pos.getX()), round2(pos.getY()), round2(pos.getZ())));
 
         } else {
@@ -341,7 +340,7 @@ public class CamCommand extends CommandBase {
 
     private void help(String[] args) throws CommandException {
         if(args.length != 0) throw new WrongUsageException("pixelcam.commands.cam.help.usage");
-        sendMessage(new TextComponentTranslation("pixelcam.commands.cam.help.main"));
+        sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.help.main"));
         writeHelpMessage("p");
         writeHelpMessage("goto");
         writeHelpMessage("clear");
@@ -354,14 +353,14 @@ public class CamCommand extends CommandBase {
     }
 
     private void writeHelpMessage(String subcommand) {
-        sendMessage(new TextComponentTranslation("pixelcam.commands.cam.help.scheme",
+        sendMessage(new ChatComponentTranslation("pixelcam.commands.cam.help.scheme",
                 I18n.format("pixelcam.commands.cam." + subcommand + ".usage"), I18n.format("pixelcam.commands.cam.help." + subcommand)));
     }
 
     private Position parseXYZ(String xIn, String yIn, String zIn) throws CommandException {
-        double x = parseCoordinate(mc.thePlayer.posX, xIn, true).getResult();
-        double y = parseCoordinate(mc.thePlayer.posY, yIn, true).getResult();
-        double z = parseCoordinate(mc.thePlayer.posZ, zIn, true).getResult();
+        double x = parseCoordinate(mc.thePlayer.posX, xIn, true).func_179628_a();
+        double y = parseCoordinate(mc.thePlayer.posY, yIn, true).func_179628_a();
+        double z = parseCoordinate(mc.thePlayer.posZ, zIn, true).func_179628_a();
 
         return new Position(x, y, z, 0, 0, 0, mc.gameSettings.fovSetting);
     }
@@ -370,16 +369,16 @@ public class CamCommand extends CommandBase {
         return new DecimalFormat("#.00").format(value);
     }
 
-    public static void sendMessage(ITextComponent message) {
-        sendMessage(message, TextFormatting.DARK_GREEN);
+    public static void sendMessage(IChatComponent message) {
+        sendMessage(message, EnumChatFormatting.DARK_GREEN);
     }
 
-    public static void sendMessage(ITextComponent message, TextFormatting color) {
-        mc.thePlayer.addChatMessage(message.setStyle(new Style().setColor(color)));
+    public static void sendMessage(IChatComponent message, EnumChatFormatting color) {
+        mc.thePlayer.addChatMessage(message.setChatStyle(new ChatStyle().setColor(color)));
     }
-
+    
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
         if(args.length < 2) {
             return getListOfStringsMatchingLastWord(args, "p", "goto", "clear", "start", "stop", "focus", "help", "save", "load", "list");
         }
@@ -388,6 +387,6 @@ public class CamCommand extends CommandBase {
             return getListOfStringsMatchingLastWord(args, pathSaveHandler.listSaveNames());
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.addTabCompletionOptions(sender, args, pos);
     }
 }
