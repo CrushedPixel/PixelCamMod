@@ -29,7 +29,7 @@ pixelcam.commands.cam.help.stop=Stops travelling the path.
 pixelcam.commands.cam.help.focus=Sets a focus point for the camera to look at.
 pixelcam.commands.cam.help.io.list=Lists all available paths to load
 pixelcam.commands.cam.help.io.load=Loads the specified camera path from disk
-pixelcam.commands.cam.help.io.save-Saves the specified camera path to disk
+pixelcam.commands.cam.help.io.save=Saves the specified camera path to disk
 pixelcam.commands.cam.error.index=Invalid index: %1$s
 pixelcam.commands.cam.p.success=Added point %1$s at (%2$s/%3$s/%4$s/%5$s/%6$s/%7$s/%8$s)
 pixelcam.commands.cam.clear.success.one=Removed point %1$s
