@@ -30,9 +30,9 @@ ext.inceptionYear = '2016'
 
 minecraft {
     coreMod = "com.replaymod.pixelcam.coremod.LoadingPlugin"
-    version = " 1.10.2-12.18.1.2011"
+    version = " 1.9.4-12.17.0.1976"
     runDir = "run"
-    mappings = "snapshot_20160518"
+    mappings = "stable_26"
 }
 
 dependencies {
