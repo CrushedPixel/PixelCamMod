@@ -119,7 +119,6 @@ public class CamCommand extends CommandBase {
         if(base.equalsIgnoreCase("clear")) clear(args);
         else if(base.equalsIgnoreCase("goto")) goTo(args);
         else if(base.equalsIgnoreCase("p")) p(args);
-        else if(base.equalsIgnoreCase("addp")) addp(args);
         else if(base.equalsIgnoreCase("start")) start(args);
         else if(base.equalsIgnoreCase("stop")) stop(args);
         else if(base.equalsIgnoreCase("focus")) focus(args);
@@ -211,45 +210,51 @@ public class CamCommand extends CommandBase {
     }
 
     private void p(String[] args) throws CommandException {
-        if(args.length > 1) throw new WrongUsageException("pixelcam.commands.cam.p.usage");
+        if(args.length > 2) throw new WrongUsageException("pixelcam.commands.cam.p.usage");
 
         int index = -1;
 
-        if(args.length == 1) {
-            Integer i = parsePathIndex(args[0]);
-            if(i == null) throw new CommandException("pixelcam.commands.cam.error.index", args[0]);
+        boolean hasIndex = false;
+        boolean hasCoords = false;
+
+        if(args.length > 0) {
+            if(args[0].contains("/")) {
+                hasCoords = true;
+                hasIndex = args.length == 2;
+            } else {
+                if(args.length != 1) {
+                    throw new WrongUsageException("pixelcam.commands.cam.p.usage");
+                }
+                hasIndex = true;
+            }
+        }
+
+        if(hasIndex) {
+            Integer i = parsePathIndex(args[hasCoords ? 1 : 0]);
+            if (i == null)
+                throw new CommandException("pixelcam.commands.cam.error.index", args[hasCoords ? 1 : 0]);
             index = i;
         }
 
-        Position pos = new Position(mc.getRenderViewEntity());
+        Position pos;
+
+        if(hasCoords) {
+            String[] coords = args[0].replace(",", ".").split("/");
+
+            if (coords.length != 7) {
+                throw new WrongUsageException("pixelcam.commands.cam.p.usage");
+            }
+
+            pos = new Position(Double.parseDouble(coords[0]), Double.parseDouble(coords[1]), Double.parseDouble(coords[2]), Float.parseFloat(coords[3]), Float.parseFloat(coords[4]), Float.parseFloat(coords[5]), Float.parseFloat(coords[6]));
+        } else {
+            pos = new Position(mc.getRenderViewEntity());
+        }
 
         index = cameraPath.addPoint(pos, index);
 
         //success message
         sendMessage(new TextComponentTranslation("pixelcam.commands.cam.p.success", index+1,
                 round2(pos.getX()), round2(pos.getY()), round2(pos.getZ()), round2(pos.getYaw()), round2(pos.getPitch()), pos.getTilt(), pos.getFov()));
-    }
-
-    private void addp(String[] args) throws CommandException {
-        if (args.length < 1) throw new WrongUsageException("pixelcam.commands.cam.addp.usage");
-
-        int index = -1;
-
-        String[] coords = args[0].replace(",", ".").split("/");
-
-        if (args.length == 2) {
-            Integer i = parsePathIndex(args[1]);
-            if (i == null) throw new CommandException("pixelcam.commands.cam.error.index", args[1]);
-            index = i;
-        }
-
-        Position pos = new Position(Double.parseDouble(coords[0]), Double.parseDouble(coords[1]), Double.parseDouble(coords[2]), Float.parseFloat(coords[3]), Float.parseFloat(coords[4]), Float.parseFloat(coords[5]), Float.parseFloat(coords[6]));
-
-        index = cameraPath.addPoint(pos, index);
-
-        //uspech
-        sendMessage(new TextComponentTranslation("pixelcam.commands.cam.p.success", index+1, round2(pos.getX()), round2(pos.getY()), round2(pos.getZ()), round2(pos.getYaw()), round2(pos.getPitch()), pos.getTilt(), pos.getFov()));
-
     }
 
     private Integer parsePathIndex(String index) {
@@ -367,7 +372,6 @@ public class CamCommand extends CommandBase {
         if(args.length != 0) throw new WrongUsageException("pixelcam.commands.cam.help.usage");
         sendMessage(new TextComponentTranslation("pixelcam.commands.cam.help.main"));
         writeHelpMessage("p");
-        writeHelpMessage("addp");
         writeHelpMessage("goto");
         writeHelpMessage("clear");
         writeHelpMessage("start");
@@ -406,7 +410,7 @@ public class CamCommand extends CommandBase {
     @Override
     public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
         if(args.length < 2) {
-            return getListOfStringsMatchingLastWord(args, "p", "addp", "goto", "clear", "start", "stop", "focus", "help", "save", "load", "list");
+            return getListOfStringsMatchingLastWord(args, "p", "goto", "clear", "start", "stop", "focus", "help", "save", "load", "list");
         }
 
         if(args.length == 2 && args[0].equalsIgnoreCase("load")) {
