@@ -48,7 +48,6 @@ import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -96,21 +95,21 @@ public class CamCommand extends CommandBase {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return COMMAND_NAME;
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
         return "pixelcam.commands.cam.base.usage";
     }
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if(sender != mc.thePlayer) throw new CommandException("commands.generic.permission");
-        if(!mc.thePlayer.isCreative() && !mc.thePlayer.isSpectator()) throw new CommandException("pixelcam.commands.error.gamemode");
+        if(sender != mc.player) throw new CommandException("commands.generic.permission");
+        if(!mc.player.isCreative() && !mc.player.isSpectator()) throw new CommandException("pixelcam.commands.error.gamemode");
 
-        if(args.length <= 0) throw new CommandException(getCommandUsage(sender));
+        if(args.length <= 0) throw new CommandException(getUsage(sender));
 
         String base = args[0];
 
@@ -201,7 +200,7 @@ public class CamCommand extends CommandBase {
 
         Position pos = cameraPath.getPoint(index);
 
-        mc.thePlayer.setPositionAndRotation(pos.getX(), pos.getY(), pos.getZ(), pos.getYaw(), pos.getPitch());
+        mc.player.setPositionAndRotation(pos.getX(), pos.getY(), pos.getZ(), pos.getYaw(), pos.getPitch());
         TiltHandler.setTilt(pos.getTilt());
 
         //success message
@@ -342,7 +341,7 @@ public class CamCommand extends CommandBase {
             focusPointHandler.setEnabled(true);
 
             if(args.length == 1 && focusPointHandler.getFocusPoint() == null) {
-                Position pos = new Position(mc.thePlayer);
+                Position pos = new Position(mc.player);
                 focusPointHandler.setFocusPoint(pos);
                 sendMessage(new TextComponentTranslation("pixelcam.commands.cam.focus.set",
                         round2(pos.getX()), round2(pos.getY()), round2(pos.getZ())));
@@ -388,9 +387,9 @@ public class CamCommand extends CommandBase {
     }
 
     private Position parseXYZ(String xIn, String yIn, String zIn) throws CommandException {
-        double x = parseCoordinate(mc.thePlayer.posX, xIn, true).getResult();
-        double y = parseCoordinate(mc.thePlayer.posY, yIn, true).getResult();
-        double z = parseCoordinate(mc.thePlayer.posZ, zIn, true).getResult();
+        double x = parseCoordinate(mc.player.posX, xIn, true).getResult();
+        double y = parseCoordinate(mc.player.posY, yIn, true).getResult();
+        double z = parseCoordinate(mc.player.posZ, zIn, true).getResult();
 
         return new Position(x, y, z, 0, 0, 0, mc.gameSettings.fovSetting);
     }
@@ -404,11 +403,11 @@ public class CamCommand extends CommandBase {
     }
 
     public static void sendMessage(ITextComponent message, TextFormatting color) {
-        mc.thePlayer.addChatMessage(message.setStyle(new Style().setColor(color)));
+        mc.player.sendMessage(message.setStyle(new Style().setColor(color)));
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
         if(args.length < 2) {
             return getListOfStringsMatchingLastWord(args, "p", "goto", "clear", "start", "stop", "focus", "help", "save", "load", "list");
         }
@@ -417,6 +416,6 @@ public class CamCommand extends CommandBase {
             return getListOfStringsMatchingLastWord(args, pathSaveHandler.listSaveNames());
         }
 
-        return super.getTabCompletionOptions(server, sender, args, pos);
+        return super.getTabCompletions(server, sender, args, pos);
     }
 }

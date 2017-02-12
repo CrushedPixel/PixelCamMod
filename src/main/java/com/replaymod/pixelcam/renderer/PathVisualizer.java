@@ -137,7 +137,7 @@ public class PathVisualizer {
         double y = pos.getY() - playerY;
         double z = pos.getZ() - playerZ;
 
-        GlStateManager.translate(x, y + mc.thePlayer.eyeHeight, z);
+        GlStateManager.translate(x, y + mc.player.eyeHeight, z);
 
         float pitch = mc.getRenderManager().playerViewX;
         float yaw = mc.getRenderManager().playerViewY;
@@ -171,8 +171,8 @@ public class PathVisualizer {
 
         GlStateManager.rotate(180, 0, 0, 1);
         GlStateManager.scale(scale, scale, scale);
-        GlStateManager.translate(-mc.fontRendererObj.getStringWidth(string)/2+0.5, -3.5, -0.1);
-        mc.fontRendererObj.drawString(string, 0, 0, Color.BLACK.getRGB());
+        GlStateManager.translate(-mc.fontRenderer.getStringWidth(string)/2+0.5, -3.5, -0.1);
+        mc.fontRenderer.drawString(string, 0, 0, Color.BLACK.getRGB());
 
         GlStateManager.popAttrib();
         GlStateManager.popMatrix();
@@ -194,7 +194,7 @@ public class PathVisualizer {
 
         VertexBuffer vb = Tessellator.getInstance().getBuffer();
 
-        vb.setTranslation(x, y + mc.thePlayer.eyeHeight, z);
+        vb.setTranslation(x, y + mc.player.eyeHeight, z);
 
         vb.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
 

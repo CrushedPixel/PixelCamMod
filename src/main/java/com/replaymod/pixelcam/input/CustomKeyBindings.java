@@ -47,7 +47,7 @@ public class CustomKeyBindings {
     private final CustomKeyBinding addPoint = new CustomKeyBinding("pixelcam.input.addPoint", Keyboard.KEY_P, "pixelcam.title", false) {
         @Override
         public void onPressed() {
-            ClientCommandHandler.instance.executeCommand(mc.thePlayer, "/cam p");
+            ClientCommandHandler.instance.executeCommand(mc.player, "/cam p");
         }
     };
 
