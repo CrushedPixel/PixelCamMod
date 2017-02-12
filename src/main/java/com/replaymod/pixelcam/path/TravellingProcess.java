@@ -58,8 +58,8 @@ public class TravellingProcess {
         Preconditions.checkState(!active);
         this.repeat = repeat;
 
-        wasSpectator = mc.thePlayer.isSpectator();
-        mc.thePlayer.sendChatMessage("/gamemode 3");
+        wasSpectator = mc.player.isSpectator();
+        mc.player.sendChatMessage("/gamemode 3");
 
         startTime = System.currentTimeMillis();
         active = true;
@@ -68,7 +68,7 @@ public class TravellingProcess {
     public void stop() {
         Preconditions.checkState(active);
 
-        if(!wasSpectator) mc.thePlayer.sendChatMessage("/gamemode 1");
+        if(!wasSpectator) mc.player.sendChatMessage("/gamemode 1");
 
         active = false;
     }
@@ -85,17 +85,17 @@ public class TravellingProcess {
 
         interpolation.applyPoint(progress, pos);
 
-        mc.thePlayer.setPositionAndRotation(pos.getX(), pos.getY(), pos.getZ(), pos.getYaw(), pos.getPitch());
+        mc.player.setPositionAndRotation(pos.getX(), pos.getY(), pos.getZ(), pos.getYaw(), pos.getPitch());
 
         //this fixes camera jerking; setPositionAndRotation fights to keep prevRotationPitch and yaw within [-180, 180),
         // but keeps rotationPitch and rotationYaw within [0, 360)
-        mc.thePlayer.prevRotationPitch = mc.thePlayer.rotationPitch;
-        mc.thePlayer.prevRotationYaw = mc.thePlayer.rotationYaw;
+        mc.player.prevRotationPitch = mc.player.rotationPitch;
+        mc.player.prevRotationYaw = mc.player.rotationYaw;
 
         //this fixes camera jittering
-        mc.thePlayer.lastTickPosX = pos.getX();
-        mc.thePlayer.lastTickPosY = pos.getY();
-        mc.thePlayer.lastTickPosZ = pos.getZ();
+        mc.player.lastTickPosX = pos.getX();
+        mc.player.lastTickPosY = pos.getY();
+        mc.player.lastTickPosZ = pos.getZ();
 
         TiltHandler.setTilt(pos.getTilt());
         mc.gameSettings.fovSetting = (float) pos.getFov();
