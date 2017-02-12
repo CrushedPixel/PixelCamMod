@@ -56,9 +56,9 @@ public class FocusPointHandler {
     public void onRenderTick(TickEvent.RenderTickEvent event) {
         if(!enabled || focusPoint == null || PixelCamMod.instance.camCommand.isTravelling()) return;
 
-        double diffX = interpolate(mc.thePlayer.prevPosX, mc.thePlayer.posX) - focusPoint.getX();
-        double diffY = interpolate(mc.thePlayer.prevPosY, mc.thePlayer.posY) + mc.thePlayer.eyeHeight - focusPoint.getY();
-        double diffZ = interpolate(mc.thePlayer.prevPosZ, mc.thePlayer.posZ) - focusPoint.getZ();
+        double diffX = interpolate(mc.player.prevPosX, mc.player.posX) - focusPoint.getX();
+        double diffY = interpolate(mc.player.prevPosY, mc.player.posY) + mc.player.eyeHeight - focusPoint.getY();
+        double diffZ = interpolate(mc.player.prevPosZ, mc.player.posZ) - focusPoint.getZ();
 
         double distance = Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2) + Math.pow(diffZ, 2));
 
@@ -74,8 +74,8 @@ public class FocusPointHandler {
         yaw = (90 + yaw * 180f / (float)Math.PI);
         pitch = (pitch * 180f / (float)Math.PI);
 
-        mc.thePlayer.prevRotationYaw = mc.thePlayer.rotationYaw = (float)yaw;
-        mc.thePlayer.prevRotationPitch = mc.thePlayer.rotationPitch = (float)pitch;
+        mc.player.prevRotationYaw = mc.player.rotationYaw = (float)yaw;
+        mc.player.prevRotationPitch = mc.player.rotationPitch = (float)pitch;
     }
 
     private double interpolate(double prevPos, double pos) {
