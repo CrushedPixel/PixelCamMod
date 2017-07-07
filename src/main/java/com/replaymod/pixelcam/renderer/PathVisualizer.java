@@ -26,7 +26,7 @@ import com.replaymod.pixelcam.path.Position;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -129,7 +129,7 @@ public class PathVisualizer {
 
         GlStateManager.color(1, 1, 1, 0.5f);
 
-        VertexBuffer vb = Tessellator.getInstance().getBuffer();
+        BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
         mc.renderEngine.bindTexture(pointTexture);
 
@@ -192,7 +192,7 @@ public class PathVisualizer {
 
         GlStateManager.color(color.getRed(), color.getGreen(), color.getBlue(), 0.7f);
 
-        VertexBuffer vb = Tessellator.getInstance().getBuffer();
+        BufferBuilder vb = Tessellator.getInstance().getBuffer();
 
         vb.setTranslation(x, y + mc.player.eyeHeight, z);
 
