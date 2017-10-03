@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 import java.util.Map;
 
-@IFMLLoadingPlugin.MCVersion("1.12")
+@IFMLLoadingPlugin.MCVersion("1.12.2")
 @IFMLLoadingPlugin.Name("PixelCamTilt")
 public class LoadingPlugin implements IFMLLoadingPlugin {
 
